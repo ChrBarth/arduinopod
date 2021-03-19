@@ -2,4 +2,6 @@
 
 Right now, you can select programs 1A to 1D via one of the four buttons connected to pins 9, 10, 11 and 12.
 
+Here is the wiring diagram:
 
+![wiring diagram](breadboard-wiring.png)
