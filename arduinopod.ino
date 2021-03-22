@@ -15,6 +15,7 @@ int PinLED2 = 4;
 int PinLED3 = 3;
 int PinLED4 = 2;
 
+int currentBank = 0;
 int currentProg = 0; // So we can see if we even need to change the Program
 
 void resetLEDs() {
@@ -51,38 +52,24 @@ void setup() {
     resetLEDs();
 }
 
+void buttonAction(int button, int led, int prog) {
+    // Buttons are HIGH by default and LOW when pressed
+    if (digitalRead(button) == LOW) {
+        if (currentProg != prog) {
+            currentProg = prog;
+            resetLEDs();
+            digitalWrite(led, HIGH);
+            sendMIDI(currentBank+prog);
+            delay(20);
+            }
+        }
+    }
+
 void loop() {
 
-    // Buttons are HIGH by default and LOW when pressed
-    // Button 1 -> Change to Program 1A
-    if (digitalRead(PinButton1) == LOW && currentProg != 1) {
-        currentProg = 1;
-        resetLEDs();
-        digitalWrite(PinLED1, HIGH);
-        sendMIDI(1);
-        }
-
-    // Button 2 -> Change to Program 1B
-    if (digitalRead(PinButton2) == LOW && currentProg != 2) {
-        currentProg = 2;
-        resetLEDs();
-        digitalWrite(PinLED2, HIGH);
-        sendMIDI(2);
-        }
-
-    // Button 3 -> Change to Program 1C
-    if (digitalRead(PinButton3) == LOW && currentProg != 3) {
-        currentProg = 3;
-        resetLEDs();
-        digitalWrite(PinLED3, HIGH);
-        sendMIDI(3);
-        }
-
-    // Button 4 -> Change to Program 1D
-    if (digitalRead(PinButton4) == LOW && currentProg != 4) {
-        currentProg = 4;
-        resetLEDs();
-        digitalWrite(PinLED4, HIGH);
-        sendMIDI(4);
-        }
+    // check if buttons were pressed:
+    buttonAction(PinButton1, PinLED1, 1);
+    buttonAction(PinButton2, PinLED2, 2);
+    buttonAction(PinButton3, PinLED3, 3);
+    buttonAction(PinButton4, PinLED4, 4);
     }
