@@ -59,8 +59,15 @@ void buttonAction(int button, int led, int prog) {
             currentProg = prog;
             resetLEDs();
             digitalWrite(led, HIGH);
-            sendMIDI(currentBank+prog);
-            delay(20);
+            sendMIDI(currentBank*4+prog);
+            delay(150);
+            }
+        else if (currentProg == prog) {
+            currentBank = currentBank ^ 1;
+            resetLEDs();
+            digitalWrite(led, HIGH);
+            sendMIDI(currentBank*4+prog);
+            delay(150);
             }
         }
     }
