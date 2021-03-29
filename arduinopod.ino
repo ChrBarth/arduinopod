@@ -1,9 +1,7 @@
 // POD 2.0 MIDI-Controller
 // 4 Buttons that send CC-Signals to the POD and Switch to
 // a different Program (1A - 1D)
-// TODO: Maybe use interrupts instead of looping over the state of each button
-// TODO: Add little delay after sending commands to the pod, since pushing two or more buttons
-//       simultaneuously seems to restart the pod and is probably not the best idea...
+// Added functionality: Switch between banks 1 and 2
 
 int PinButton1 = 12;
 int PinButton2 = 11;
@@ -23,6 +21,13 @@ void resetLEDs() {
     digitalWrite(PinLED2, LOW);
     digitalWrite(PinLED3, LOW);
     digitalWrite(PinLED4, LOW);
+    }
+
+void setLEDs() {
+    digitalWrite(PinLED1, HIGH);
+    digitalWrite(PinLED2, HIGH);
+    digitalWrite(PinLED3, HIGH);
+    digitalWrite(PinLED4, HIGH);
     }
 
 void sendMIDI(int program) {
@@ -57,17 +62,31 @@ void buttonAction(int button, int led, int prog) {
     if (digitalRead(button) == LOW) {
         if (currentProg != prog) {
             currentProg = prog;
-            resetLEDs();
-            digitalWrite(led, HIGH);
+            if (currentBank == 1) {
+                // if we are in bank 2 we "invert" the LEDs
+                setLEDs();
+                digitalWrite(led, LOW);
+                }
+            else {
+                resetLEDs();
+                digitalWrite(led, HIGH);
+            }
             sendMIDI(currentBank*4+prog);
-            delay(150);
+            delay(250);
             }
         else if (currentProg == prog) {
             currentBank = currentBank ^ 1;
-            resetLEDs();
-            digitalWrite(led, HIGH);
+            if (currentBank == 1) {
+                // if we are in bank 2 we "invert" the LEDs
+                setLEDs();
+                digitalWrite(led, LOW);
+            }
+            else {
+                resetLEDs();
+                digitalWrite(led, HIGH);
+                }
             sendMIDI(currentBank*4+prog);
-            delay(150);
+            delay(250);
             }
         }
     }
