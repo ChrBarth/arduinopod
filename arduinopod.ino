@@ -60,6 +60,10 @@ void setup() {
 void buttonAction(int button, int led, int prog) {
     // Buttons are HIGH by default and LOW when pressed
     if (digitalRead(button) == LOW) {
+        while (digitalRead(button) == LOW) {
+            // wait until the button gets released:
+            delay(1);
+            }
         if (currentProg != prog) {
             currentProg = prog;
             if (currentBank == 1) {
@@ -86,7 +90,7 @@ void buttonAction(int button, int led, int prog) {
                 digitalWrite(led, HIGH);
                 }
             sendMIDI(currentBank*4+prog);
-            delay(250);
+            delay(50);
             }
         }
     }
